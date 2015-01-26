@@ -1,0 +1,572 @@
+FORMAT: 1A
+
+# WPS Note REST API
+
+# WPS Note API Root [/]
+WPS Note API entry point.
+This resource does not have any attributes. Instead it offers the initial API affordances in the form of the HTTP Link header and HAL links.
+
+## Retrieve Entry Point [GET]
++ Response 200 (application/hal+json)
+    + Headers
+
+            Link: <http:/api.wps.cn/>;rel="self"
+
+    + Body
+
+            {
+                "_links": {
+                    "self": { "href": "/" },
+                }
+            }
+
+# Group Message and Resource
+
+## Messages [/messages]
+Message Collection
+
+### get messages [GET]
+Get all messages matched condintions.
++ Response 200
+
+### create a message [POST]
+Create a message.
++ Request
+    [Message Properties][]
++ Response 201
+    [Message Properties][]
+
+### delete all message matched conditions [DELETE]
++ Request
+
+        {
+            "folder_id": "BF42FF82-5AF6-F873-694F-5C95CC329E23"
+        }
++ Response 204
+
+## Messages Properties [/messages/properties]
+Message clollection properties.
+It has the following attributes:
+- count
+- deleted_count
+
++ Model (application/hal+json)
+    + Body
+
+            {
+                "count": "1",
+                "deleted_count": "0"
+            }
+
+### get message collection properties [GET]
+
++ Response 200
+    [Messages Properties][]
+
+## Message [/messages/{id}]
+Message related.
++ Parameters
+    + id (UUID) ... message id
+
+### get a message [GET]
+Get a message that can getting its resources.
++ Request (application/json)
+
+        {
+            "include_resources": "true/false"
+        }
++ Response 200
+
+### update a message [PUT]
+
++ Request (application/json)
+    [Message Properties][]
++ Response 200
+    [Message Properties][]
+
+### delete a message [DELETE]
++ Response 204
+
+## Message Copy [/messages/{id}/copy]
+
++ Parameters
+    + id (UUID) ... message id
+
+### copy a message [POST]
++ Request (application/json)
+
+        {
+            "dest_folder_id": "BF42FF82-5AF6-F873-694F-5C95CC329E23"
+        }
++ Response 200
+    [Message Properties][]
+
+## Message Properties [/message/{id}/properties]
+Message Properties.
+It has the following attributes:
+- id
+- name
+- folderId
+- resourceCount
+- lastUpdateTime
+- createdTime
+- size
+- sate[normal, deleted, purged]
+- type[Note, Mail, SharedNote, CompoundFile]
+- description
+- startResourceId
+- shareUrl
+- usn
+
++ Parameters
+    + id (UUID) ... message id
+
++ Model
+    + Body
+
+            {
+                "id" : "AE085055-33BB-8D41-9B0D-824F7429CE3E",
+                "name": "message name",
+                "folderId": "BF42FF82-5AF6-F873-694F-5C95CC329E23",
+                "resourceCount": "10",
+                "lastUpdateTime": "2014-12-19T02:15:15Z",
+                "createdTime": "2014-12-19T02:15:15Z",
+                "size": "10240",
+                "sate": "normal",
+                "type": "note",
+                "description": "description of note",
+                "startResourceId": "61973CEE-7AC5-38A1-859D-3B474C2703AF",
+                "shareUrl": "http://...",
+                "usn": "1"
+            }
+
+### get message properties [GET]
++ Response 200
+    [Message Properties][]
+
+## Resources [/messages/{id}/resources]
+Resource Collection.
+
+### create resource [POST]
++ Response 200
+    [Resource Properties][]
+
+### delete resources [DELETE]
++ Response 204
+
+## Resources statistics [/messages/resources/properties]
+Resource Collection.
+It has following properties:
+- messageId
+- count
+- deletedCount
+
++ Model
+    + Body
+
+            {
+                "messageId": "AE085055-33BB-8D41-9B0D-824F7429CE3E",
+                "count": "10",
+                "deletedCount": "0"
+            }
+
+### get collection properties [GET]
++ Response 200
+    [Resources statistics][]
+
+## Resources Properties [/messages/{id}/resources/properties]
++ Model
+    + Body
+
+            {
+                "properties_collection": [
+                    {
+                        "id": "76A75BE8-4BFC-0F7D-9E8C-32BE18335E79",
+                        "name": "resource name",
+                        "mime": "image/png",
+                        "size": "4096000",
+                        "md5": "resource md5 base64 string",
+                        "lastUpdateTime": "2014-12-19T02:15:15Z",
+                        "createdTime": "2014-12-19T02:15:15Z",
+                        "messageId": ""
+                        "location": "/medias/76A75BE8-4BFC-0F7D-9E8C-32BE18335E79",
+                        "state": "normal",
+                        "description": "description of resource"
+                    }
+                ]
+            }
+
+### get resources properties [GET]
++ Response 200
+    [Resources Properties][]
+
+## Resources Md5s [/messages/{id}/resources/md5s]
+Resource md5 Collection.
+It has following properties:
+- messageId
+- count
+- deletedCount
+
++ Model
+    + Body
+
+            {
+                "properties": [
+                    {
+                        "resourceId": "AE085055-33BB-8D41-9B0D-824F7429CE3E",
+                        "md5": "md5 base64 string",
+                    }
+                ]
+            }
+
+### get Md5 collection [GET]
++ Response 200
+    [Resources Md5s][]
+
+## Resource [/messages/{id}/resources/{id}]
+
++ Model
+    + Body
+
+            {
+                "properties_collection": [
+                    {
+                        "id": "76A75BE8-4BFC-0F7D-9E8C-32BE18335E79",
+                        "name": "resource name",
+                        "mime": "image/png",
+                        "size": "4096000",
+                        "md5": "resource md5 base64 string",
+                        "lastUpdateTime": "2014-12-19T02:15:15Z",
+                        "createdTime": "2014-12-19T02:15:15Z",
+                        "messageId": ""
+                        "location": "/medias/76A75BE8-4BFC-0F7D-9E8C-32BE18335E79",
+                        "state": "normal",
+                        "description": "description of resource"
+                    }
+                ],
+                "content": "binary data"
+            }
+
+### download resource [GET]
++ Response 200
+    [Resource][]
+
+### update resource [PUT]
+
++ Request
+    [Resource][]
++ Response 200
+    [Resource Properties][]
+
+### delete resource [DELETE]
++ Response 204
+
+## Resource Url [/messages/{id}/resources/{id}/url]
+
++ Model
+    + Body
+
+            {
+                "url_pair": [
+                    {
+                        "id": "76A75BE8-4BFC-0F7D-9E8C-32BE18335E79",
+                        "url": "resource name",
+                    }
+                ],
+                "content": "binary data"
+            }
+
+### get resource url [GET]
++ Response 200
+    [Resource Url][]
+
+## Copy Resource [/messages/{id}/resources/{id}/copy]
+
+### copy resource [POST]
+
++ Request (application/json)
+
+        {
+            "dest_folder_id": "BF42FF82-5AF6-F873-694F-5C95CC329E23"
+        }
++ Response 200
+    [Resource Properties][]
+
+## Move Resource [/messages/{id}/resources/{id}/move]
+
+### move resource [POST]
+
++ Request (application/json)
+
+        {
+            "dest_folder_id": "BF42FF82-5AF6-F873-694F-5C95CC329E23"
+        }
++ Response 200
+    [Resource Properties][]
+
+## Resource Properties [/messages/{id}/resources/{id}/properties]
+Resource Properties.
+It has following properties:
+- id
+- name
+- mime
+- size
+- md5
+- lastUpdateTime
+- createdTime
+- messageId
+- location
+- sate[normal, deleted, purged],
+- description,
+- shareUrl
+
++ Model
+    + Body
+
+            {
+                "id": "76A75BE8-4BFC-0F7D-9E8C-32BE18335E79",
+                "name": "resource name",
+                "mime": "image/png",
+                "size": "4096000",
+                "md5": "resource md5 base64 string",
+                "lastUpdateTime": "2014-12-19T02:15:15Z",
+                "createdTime": "2014-12-19T02:15:15Z",
+                "messageId": ""
+                "location": "/medias/76A75BE8-4BFC-0F7D-9E8C-32BE18335E79",
+                "state": "normal",
+                "description": "description of resource",
+                "shareUrl": "http://..."
+            }
+
+### get resource properties [GET]
++ Response 200
+    [Resource Properties][]
+
+### update resource properties fully [PUT]
++ Request
+    [Resource Properties][]
++ Response 200
+    [Resource Properties][]
+
+## Ping [/messages/ping]
+
+### ping [GET]
++ Response 200
+
+            {
+                "OK"
+            }
+
+# Group Folder
+Folder related resource.
+
+## Folders [/folders]
+
+### create folder [POST]
++ Request
+    [Folder Properties][]
++ Response 201
+    [Folder Properties][]
+
+### delete all folders [DELETE]
++ Response 204
+
+## Folders Properties [/folders/properties]
+
+## Folder [/folders/{id}]
+
+### list sub folders [GET]
+
++ Request
+
+        {
+            "recursive": "false"
+        }
++ Response 200
+
+            {
+                "data": [
+                    {
+                        "id": "BF42FF82-5AF6-F873-694F-5C95CC329E23",
+                        ...
+                    },
+                    {
+                        "id": "A527B8A6-2EF2-1B2E-1B85-57F86C05696C",
+                        ...
+                    },
+                    {
+                        "id": "040A6B2E-A6EF-A770-F75B-6C8BF2A24306",
+                        ...
+                    }
+                ]
+            }
+
+### delete folder [DELETE]
++ Response 204
+
+## Folder Copy [/folders/{id}/copy]
+
+### copy folder [POST]
++ Request (application/json)
+
+        {
+            "dest_folder_id": "BF42FF82-5AF6-F873-694F-5C95CC329E23"
+        }
++ Response 200
+    [Folder Properties][]
+
+## Folder Move [/folders/{id}/move]
+
+### move folder [POST]
++ Request (application/json)
+
+        {
+            "dest_folder_id": "BF42FF82-5AF6-F873-694F-5C95CC329E23"
+        }
++ Response 200
+    [Folder Properties][]
+
+## Folder Properties [/folders/{id}/properties]
+It has following properties:
+- id
+- parentId
+- path
+- state[normal, deleted, purged]
+- description
+
++ Model
+    + Body
+
+            {
+                "id": "BF42FF82-5AF6-F873-694F-5C95CC329E23",
+                "parentId": "76A75BE8-4BFC-0F7D-9E8C-32BE18335E79"
+                "path": "/media",
+                "state": "normal",
+                "description": "description of folder"
+            }
+
+### get folder properties [GET]
++ Response 200
+    [Folder Properties][]
+
+### update folder properties [PUT]
++ Request
+    [Folder Properties][]
++ Response 200
+    [Folder Properties][]
+
+## Ping [/folders/ping]
+
+### ping [GET]
++ Response 200
+
+            {
+                "OK"
+            }
+
+# Group Formats
+
+## Formats [/formats]
+
++ Model
+    + Body
+
+            {
+                "data": [
+                    {
+                        "id": "note_message",
+                        ...
+                    },
+                    {
+                        "id": "mail",
+                        ...
+                    },
+                    {
+                        "id": "png",
+                        ...
+                    },
+                    {
+                        "id": "pptx",
+                        ...
+                    },
+                    {
+                        "id": "pdf",
+                        ...
+                    }
+            }
+
+### list all support formats [GET]
++ Response 200
+    [Formats][]
+
+## Format [/formats/{id}]
+
++ Model
+    + Body
+
+            {
+                "id": "note_message",
+                "description": "note message"
+            }
+
+### list support formats can convert from [GET]
++ Response 200
+    [Formats][]
+
+## Message Conversion [/formats/{format_id}/conversion/{dest_format_id}/messages/{message_id}]
+
+### convert message to dest format [POST]
+
++ Response 200
+    [Message Properties][]
+
+## Resource Conversion [/formats/{format_id}/conversion/{dest_format_id}/resources/{resource_id}]
+
+### convert resource to dest format [POST]
+
++ Response 200
+    [Resource Properties][]
+
+## Ping [/formats/ping]
+
+### ping [GET]
++ Response 200
+
+            {
+                "OK"
+            }
+
+# Group Share
+
+## Message Share [/shares/messages]
+
+### share a message [POST]
++ Request
+    + Body
+
+            {
+                "expiredTime": "65536"
+            }
++ Response 201
+    [Message Properties][]
+
+## Resource Share [/shares/resources]
+
+### share a resource [POST]
++ Request
+    + Body
+
+            {
+                "expiredTime": "65536"
+            }
++ Response 201
+    [Resource Properties][]
+
+## Ping [/shares/ping]
+
+### ping [GET]
++ Response 200
+
+            {
+                "OK"
+            }
